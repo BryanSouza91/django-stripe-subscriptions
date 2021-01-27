@@ -1,5 +1,6 @@
 let stripe, customer, price, card;
 
+    
 let priceInfo = {
   basic: {
     amount: '500',
@@ -246,7 +247,9 @@ function createCustomer() {
   return fetch('/create-customer/', {
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'X-CSRFToken': csrftoken,
     },
     body: JSON.stringify({
       email: billingEmail,
@@ -359,7 +362,9 @@ function createSubscription({ customerId, paymentMethodId, priceId }) {
     fetch('/create-subscription/', {
       method: 'post',
       headers: {
-        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-CSRFToken': csrftoken,
       },
       body: JSON.stringify({
         customerId: customerId,
@@ -418,7 +423,9 @@ function retryInvoiceWithNewPaymentMethod({
     fetch('/retry-invoice/', {
       method: 'post',
       headers: {
-        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-CSRFToken': csrftoken,
       },
       body: JSON.stringify({
         customerId: customerId,
@@ -467,7 +474,9 @@ function retrieveUpcomingInvoice(customerId, subscriptionId, newPriceId) {
   return fetch('/retrieve-upcoming-invoice/', {
     method: 'post',
     headers: {
-      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'X-CSRFToken': csrftoken,
     },
     body: JSON.stringify({
       customerId: customerId,
@@ -491,7 +500,9 @@ function cancelSubscription() {
   return fetch('/cancel-subscription/', {
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'X-CSRFToken': csrftoken,
     },
     body: JSON.stringify({
       subscriptionId: subscriptionId,
@@ -509,7 +520,9 @@ function updateSubscription(priceId, subscriptionId) {
   return fetch('/update-subscription/', {
     method: 'post',
     headers: {
-      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'X-CSRFToken': csrftoken,
     },
     body: JSON.stringify({
       subscriptionId: subscriptionId,
@@ -528,7 +541,9 @@ function retrieveCustomerPaymentMethod(paymentMethodId) {
   return fetch('/retrieve-customer-payment-method/', {
     method: 'post',
     headers: {
-      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'X-CSRFToken': csrftoken,
     },
     body: JSON.stringify({
       paymentMethodId: paymentMethodId,
@@ -542,11 +557,15 @@ function retrieveCustomerPaymentMethod(paymentMethodId) {
     });
 }
 
+const csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
 function getConfig() {
   return fetch('/config/', {
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'X-CSRFToken': csrftoken,
     },
   })
     .then((response) => {
@@ -557,6 +576,7 @@ function getConfig() {
       stripeElements(response.publishableKey);
     });
 }
+
 
 getConfig();
 

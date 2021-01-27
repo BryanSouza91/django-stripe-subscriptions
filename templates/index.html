@@ -9,11 +9,10 @@
 
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}" />
     <link rel="stylesheet" href="{% static 'css/global.css' %}" />
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="{% static '/script.js' %}"></script>
   </head>
 
   <body class="antialiased p-6">
+    {% csrf_token %}
     <nav class="flex items-center justify-between flex-wrap">
       <svg width="79px" height="24px" viewBox="0 0 79 24">
         <image
@@ -148,4 +147,6 @@
     </div>
   </body>
   <footer class="h-24"></footer>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="{% static '/script.js' %}"></script>
 </html>

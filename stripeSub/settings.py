@@ -17,6 +17,7 @@ from dotenv import load_dotenv, find_dotenv
 
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
+
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 stripe.api_version = os.getenv("STRIPE_API_VERSION")
 
@@ -30,7 +31,7 @@ TEMPLATES_DIR = Path(f"{BASE_DIR}/templates")
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "xlc6(7xzbps8v^&wz=#g)3%vgwz$54rid2)no**e-v76oofee#"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
