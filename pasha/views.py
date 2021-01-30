@@ -5,8 +5,6 @@ from http import HTTPStatus
 
 from django.http import JsonResponse
 from django.views.generic import TemplateView, View
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 
 class Index(TemplateView):
@@ -46,7 +44,6 @@ class Config(View):
         )
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class CreateCustomer(View):
     """
     route('/create-customer', methods=['POST'])
@@ -66,7 +63,6 @@ class CreateCustomer(View):
             return JsonResponse({"error": str(e)}, status=HTTPStatus.FORBIDDEN)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class CreateSubscription(View):
     """
     route('/create-subscription', methods=['POST'])
@@ -87,7 +83,8 @@ class CreateSubscription(View):
                     "default_payment_method": data["paymentMethodId"],
                 },
             )
-
+            print(data["priceId"])
+            print(os.getenv(data["priceId"]))
             # Create the subscription
             subscription = stripe.Subscription.create(
                 customer=data["customerId"],
@@ -99,37 +96,36 @@ class CreateSubscription(View):
             return JsonResponse({"error": str(e)}, status=HTTPStatus.OK)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class RetrySubscription(View):
     """
     route('/retry-invoice', methods=['POST'])
     """
+
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         try:
 
             payment_method = stripe.PaymentMethod.attach(
-                data['paymentMethodId'],
-                customer=data['customerId'],
+                data["paymentMethodId"],
+                customer=data["customerId"],
             )
             # Set the default payment method on the customer
             stripe.Customer.modify(
-                data['customerId'],
+                data["customerId"],
                 invoice_settings={
-                    'default_payment_method': payment_method.id,
+                    "default_payment_method": payment_method.id,
                 },
             )
 
             invoice = stripe.Invoice.retrieve(
-                data['invoiceId'],
-                expand=['payment_intent'],
+                data["invoiceId"],
+                expand=["payment_intent"],
             )
             return JsonResponse(invoice)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=HTTPStatus.OK)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class RetrieveCustomerPaymentMethod(View):
     """
     route('/retrieve-customer-payment-method', methods=['POST'])
@@ -146,7 +142,6 @@ class RetrieveCustomerPaymentMethod(View):
             return JsonResponse({"error": str(e)}, status=HTTPStatus.FORBIDDEN)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class RetrieveUpcomingInvoice(View):
     """
     route('/retrieve-upcoming-invoice', methods=['POST'])
@@ -172,7 +167,6 @@ class RetrieveUpcomingInvoice(View):
             return JsonResponse({"error": str(e)}, status=HTTPStatus.FORBIDDEN)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class UpdateSubscription(View):
     """
     route('/update-subscription', methods=['POST'])
@@ -198,7 +192,6 @@ class UpdateSubscription(View):
             return JsonResponse({"error": str(e)}, status=HTTPStatus.FORBIDDEN)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class CancelSubscription(View):
     """
     route('/cancel-subscription', methods=['POST'])
@@ -214,7 +207,6 @@ class CancelSubscription(View):
             return JsonResponse({"error": str(e)}, status=HTTPStatus.FORBIDDEN)
 
 
-#@method_decorator(csrf_exempt, name="dispatch")
 class Webhook(View):
     """
     route('/stripe-webhook', methods=['POST'])
